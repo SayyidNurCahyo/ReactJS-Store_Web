@@ -2,17 +2,17 @@ import { useMemo } from "react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
-import CustomerService from "../../../services/CustomerService";
+import MenuService from "../../../services/MenuService";
 import { useEffect } from "react";
 import Toast from "../../../shared/toast/Toast";
 import { Link } from "react-router-dom";
 import { IconEditCircle, IconTrash } from "@tabler/icons-react";
 
-export default function CustomerList() {
-  const [customers, setCustomers] = useState([]);
+export default function MenuList() {
+  const [menus, setMenus] = useState([]);
   const { register } = useForm();
   const [searchParam, setSearchParam] = useSearchParams();
-  const customerService = useMemo(() => CustomerService(), []);
+  const menuService = useMemo(() => MenuService(), []);
   const [showToast, setShowToast] = useState(false);
 
   const search = searchParam.get("name" || "");
@@ -50,13 +50,12 @@ export default function CustomerList() {
   };
 
   const handleDelete = async (id) => {
-    if (!confirm("apakah yakin menghapus customer ini?")) return;
+    if (!confirm("apakah yakin menghapus menu ini?")) return;
     try {
-      console.log(id);
-      const response = await customerService.deleteById(id);
+      const response = await MenuService.deleteById(id);
       if (response.statusCode === 200) {
-        const data = await customerService.getAll();
-        setCustomers(data.data);
+        const data = await MenuService.getAll();
+        setMenus(data.data);
         setShowToast(true);
         setTimeout(() => {
           setShowToast(false);
@@ -68,27 +67,27 @@ export default function CustomerList() {
   };
 
   useEffect(() => {
-    if (showToast === true) Toast("customer berhasil dihapus", "danger");
-    const getCustomers = async () => {
+    if (showToast === true) Toast("Menu berhasil dihapus", "danger");
+    const getMenus = async () => {
       try {
-        const data = await customerService.getAll({
+        const data = await MenuService.getAll({
           name: search,
           page: page,
           size: size,
         });
-        setCustomers(data.data);
+        setMenus(data.data);
         setPaging(data.paging);
       } catch (err) {
         console.log(err);
       }
     };
-    getCustomers();
-  }, [customerService, page, search, searchParam, size, showToast]);
+    getMenus();
+  }, [menuService, page, search, searchParam, size, showToast]);
 
   return (
     <div className="p-4 shadow-sm rounded-2">
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h3>Daftar Customer</h3>
+        <h3>Daftar Menu</h3>
       </div>
       <div className="d-flex justify-content-between align-items-center mt-4">
         <div className="row">
@@ -129,22 +128,36 @@ export default function CustomerList() {
             <tr>
               <th>No</th>
               <th>Nama</th>
-              <th>Nomor Telepon</th>
-              <th>Username</th>
+              <th>Harga</th>
+              <th>Gambar</th>
               <th>Aksi</th>
             </tr>
           </thead>
           <tbody>
-            {customers.map((customer, index) => (
-              <tr key={customer.customerId}>
+            {menus.map((menu, index) => (
+              <tr key={menu.menuId}>
                 <td>{index+1+((+size)*((+page)-1))}</td>
-                <td>{customer.customerName}</td>
-                <td>{customer.customerPhone}</td>
-                <td>{customer.customerUsername}</td>
+                <td>{menu.menuName}</td>
+                <td>{menu.menuPrice}</td>
+                <td>
+                  {menu.ImageResponses.map((image, index) => (
+                    <div className="row">
+                    <div className="col-md-4">
+                    <img
+                    className="img-fluid"
+                    width={100}
+                    height={100}
+                    src={menu.imageResponses.url}
+                    alt={menu.imageResponses.name}
+                  />
+                    </div>
+                </div>
+                  ))}
+                </td>
                 <td>
                   <div className="btn-group">
                     <Link
-                      to={`/customer/update/${customer.customerId}`}
+                      to={`/Menu/update/${Menu.MenuId}`}
                       className="btn btn-primary"
                     >
                       <i>
@@ -156,7 +169,7 @@ export default function CustomerList() {
                       className="btn btn-danger text-white"
                       //   data-bs-toggle="modal"
                       //   data-bs-target="#deleteModal"
-                      onClick={() => handleDelete(customer.customerId)}
+                      onClick={() => handleDelete(Menu.MenuId)}
                     >
                       <IconTrash />
                     </button>
@@ -169,7 +182,7 @@ export default function CustomerList() {
                         <div className="modal-content">
                           <div className="modal-header">
                             <h1 className="modal-title fs-5">
-                              Konfirmasi Hapus Customer
+                              Konfirmasi Hapus Menu
                             </h1>
                             <button
                               type="button"
@@ -179,7 +192,7 @@ export default function CustomerList() {
                             ></button>
                           </div>
                           <div className="modal-body">
-                            Apakah anda yakin ingin menghapus customer ini?
+                            Apakah anda yakin ingin menghapus Menu ini?
                           </div>
                           <div className="modal-footer">
                             <button
@@ -190,7 +203,7 @@ export default function CustomerList() {
                               Close
                             </button>
                             <button
-                              onClick={() => handleDelete(customer.customerId)}
+                              onClick={() => handleDelete(Menu.MenuId)}
                               data-bs-dismiss="modal"
                               className="btn btn-danger text-white"
                             >
@@ -210,7 +223,7 @@ export default function CustomerList() {
 
       <div className="d-flex align-items-center justify-content-between mt-4">
         <small>
-          Show data {customers.length} of {paging.totalElement}
+          Show data {Menus.length} of {paging.totalElement}
         </small>
         <nav aria-label="Page navigation example">
           <ul className="pagination">

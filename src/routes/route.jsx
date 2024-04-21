@@ -42,7 +42,8 @@ const router = createBrowserRouter([
                 element: <CustomerForm/>
             }
         ]
-      }
+      },
+      
     ],
   },
 ]);

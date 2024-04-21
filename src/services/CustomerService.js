@@ -18,6 +18,7 @@ const CustomerService = () => {
 
   const deleteById = async (id) => {
     const { data } = await axiosInstance.delete(`/customers/${id}`);
+    console.log(data);
     return data;
   };
 

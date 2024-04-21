@@ -47,10 +47,10 @@ export default function CustomerForm() {
   const onSubmit = async (data) => {
     try {
       const response = await customerService.update(data);
-      if (response && response.statusCode === 200) {
+      if (response && response.statusCode === 202 ) {
         clearForm();
-        navigate("/customer");
       }
+      navigate("/customer");
     } catch (err) {
       console.log(err);
     }
