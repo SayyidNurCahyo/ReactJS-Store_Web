@@ -48,7 +48,7 @@ export default function Login() {
   return (
     <>
       <div className="container-fluid p-0">
-        <div className="row g-0 justify-content-center">
+        <div className="row g-0 justify-content-center p-4">
           <div className="col-xxl-3 col-lg-4 col-md-8 shadow-lg rounded-4">
             <div className="d-flex p-4">
               <div className="w-100">
@@ -117,11 +117,11 @@ export default function Login() {
                         <div className="text-muted mb-2">
                           ~ Belum Punya Akun? ~
                         </div>
-                        <Link to="/register"><a
-                          className="btn btn-outline-primary w-100 waves-effect waves-light mt-2 bg-info text-white"
-                        >
-                          Register
-                        </a></Link>
+                        <Link to="/register">
+                          <button className="btn btn-outline-primary w-100 waves-effect waves-light mt-2 bg-info text-white">
+                            Register
+                          </button>
+                        </Link>
                       </div>
                     </form>
                   </div>

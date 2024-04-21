@@ -9,9 +9,21 @@ import { Link } from "react-router-dom";
 
 const schema = zod.object({
   username: zod.string().min(1, "username tidak boleh kosong"),
-  password: zod.string().min(1, "password tidak boleh kosong").regex(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/,'password harus 8 karakter, 1 uppercase-lowercase-angka'),
+  password: zod
+    .string()
+    .min(1, "password tidak boleh kosong")
+    .regex(
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/,
+      "password harus 8 karakter, 1 uppercase-lowercase-angka"
+    ),
   name: zod.string().min(1, "nama tidak boleh kosong"),
-  phone: zod.string().min(1, "nomor telepon tidak boleh kosong").regex(/^(\+62|0)(8[0-9]{2}[-.\s]?[0-9]{3,}-?[0-9]{3,}|\(0[0-9]{2}\)[-\s]?[0-9]{3,}-?[0-9]{3,}|\+62[-\s]?[0-9]{1,2}[-.\s]?[0-9]{3,}-?[0-9]{3,})$/, 'nomor telepon yang diterima dalam Indonesia'),
+  phone: zod
+    .string()
+    .min(1, "nomor telepon tidak boleh kosong")
+    .regex(
+      /^(\+62|0)(8[0-9]{2}[-.\s]?[0-9]{3,}-?[0-9]{3,}|\(0[0-9]{2}\)[-\s]?[0-9]{3,}-?[0-9]{3,}|\+62[-\s]?[0-9]{1,2}[-.\s]?[0-9]{3,}-?[0-9]{3,})$/,
+      "nomor telepon yang diterima dalam Indonesia"
+    ),
 });
 
 export default function Login() {
@@ -153,11 +165,11 @@ export default function Login() {
                         <div className="text-muted mb-2">
                           ~ Sudah Punya Akun? ~
                         </div>
-                        <Link to="/login"><a
-                          className="btn btn-outline-primary w-100 waves-effect waves-light mt-2 bg-info text-white"
-                        >
-                          Login
-                        </a></Link>
+                        <Link to="/login">
+                          <button className="btn btn-outline-primary w-100 waves-effect waves-light mt-2 bg-info text-white">
+                            Login
+                          </button>
+                        </Link>
                       </div>
                     </form>
                   </div>
