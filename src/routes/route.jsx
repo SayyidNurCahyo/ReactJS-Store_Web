@@ -4,6 +4,9 @@ import Register from "../pages/authentication/Register";
 import ProtectedRoute from "./ProtectedRoute";
 import Layout from "../layout/Layout";
 import Dashboard from "../pages/dashboard/Dashboard";
+import Customer from '../pages/customer/Customer'
+import CustomerList from "../pages/customer/components/CustomerList";
+import CustomerForm from "../pages/customer/components/CustomerForm";
 
 const router = createBrowserRouter([
   {
@@ -26,6 +29,20 @@ const router = createBrowserRouter([
         index: true,
         element: <Dashboard />,
       },
+      {
+        path: 'customer',
+        element: <Customer/>,
+        children: [
+            {
+                index: true,
+                element: <CustomerList/>
+            },
+            {
+                path: 'update/:id',
+                element: <CustomerForm/>
+            }
+        ]
+      }
     ],
   },
 ]);
