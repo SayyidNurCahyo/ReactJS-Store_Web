@@ -3,19 +3,20 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
 import CustomerService from "../../../services/CustomerService";
-import { useEffect } from "react";
-import Toast from "../../../shared/toast/Toast";
+// import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { IconEditCircle, IconTrash } from "@tabler/icons-react";
+import Loading from "../../../shared/loading/Loading";
+import { showErrorToast, showSuccessToast } from "../../../utils/ToastUtil";
+import { useQuery } from "react-query";
 
 export default function CustomerList() {
-  const [customers, setCustomers] = useState([]);
+  const [customerId, setCustomerId] = useState();
   const { register } = useForm();
   const [searchParam, setSearchParam] = useSearchParams();
   const customerService = useMemo(() => CustomerService(), []);
-  const [showToast, setShowToast] = useState(false);
 
-  const search = searchParam.get("name" || "");
+  const search = searchParam.get("name") || "";
   const page = searchParam.get("page") || "1";
   const size = searchParam.get("size") || "5";
 
@@ -30,8 +31,8 @@ export default function CustomerList() {
 
   const handleSearch = (event) => {
     const { value } = event.target;
-    if (value === "") setSearchParam({ page: "1", size: "5" });
-    else setSearchParam({ name: value, page: "1", size: "5" });
+    // if (value === "") setSearchParam({ page: "1", size: "5" });
+    setSearchParam({ name: value, page: "1", size: "5" });
   };
 
   const handleNextPage = () => {
@@ -50,40 +51,32 @@ export default function CustomerList() {
   };
 
   const handleDelete = async (id) => {
-    if (!confirm("apakah yakin menghapus customer ini?")) return;
     try {
-      console.log(id);
       const response = await customerService.deleteById(id);
-      if (response.statusCode === 200) {
-        const data = await customerService.getAll();
-        setCustomers(data.data);
-        setShowToast(true);
-        setTimeout(() => {
-          setShowToast(false);
-        }, 3000);
-      }
+      showSuccessToast(response.message);
+      refetch();
     } catch (err) {
-      console.log(err);
+      showErrorToast(err);
     }
   };
 
-  useEffect(() => {
-    if (showToast === true) Toast("customer berhasil dihapus", "danger");
-    const getCustomers = async () => {
-      try {
-        const data = await customerService.getAll({
-          name: search,
-          page: page,
-          size: size,
-        });
-        setCustomers(data.data);
-        setPaging(data.paging);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getCustomers();
-  }, [customerService, page, search, searchParam, size, showToast]);
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["customers", search, page, size],
+    queryFn: async () => {
+      return await customerService.getAll({
+        name: search,
+        page: page,
+        size: size,
+      });
+    },
+    onSuccess: (data) => {
+      setPaging(data.paging);
+    },
+  });
+
+  // if (isLoading) {
+  //   return <Loading />;
+  // }
 
   return (
     <div className="p-4 shadow-sm rounded-2">
@@ -98,7 +91,11 @@ export default function CustomerList() {
               name="size"
               id="size"
               onChange={(e) => {
-                setSearchParam({ q: search, page: page, size: e.target.value });
+                setSearchParam({
+                  name: search,
+                  page: page,
+                  size: e.target.value,
+                });
               }}
             >
               <option value="5">5</option>
@@ -135,82 +132,78 @@ export default function CustomerList() {
             </tr>
           </thead>
           <tbody>
-            {customers.map((customer, index) => (
-              <tr key={customer.customerId}>
-                <td>{index+1+((+size)*((+page)-1))}</td>
-                <td>{customer.customerName}</td>
-                <td>{customer.customerPhone}</td>
-                <td>{customer.customerUsername}</td>
-                <td>
-                  <div className="btn-group">
-                    <Link
-                      to={`/customer/update/${customer.customerId}`}
-                      className="btn btn-primary"
-                    >
-                      <i>
-                        <IconEditCircle />
-                      </i>
-                    </Link>
-                    <button
-                      type="button"
-                      className="btn btn-danger text-white"
-                      //   data-bs-toggle="modal"
-                      //   data-bs-target="#deleteModal"
-                      onClick={() => handleDelete(customer.customerId)}
-                    >
-                      <IconTrash />
-                    </button>
-                    {/* <div
-                      className="modal fade"
-                      id="deleteModal"
-                      aria-hidden="true"
-                    >
-                      <div className="modal-dialog">
-                        <div className="modal-content">
-                          <div className="modal-header">
-                            <h1 className="modal-title fs-5">
-                              Konfirmasi Hapus Customer
-                            </h1>
-                            <button
-                              type="button"
-                              className="btn-close"
-                              data-bs-dismiss="modal"
-                              aria-label="Close"
-                            ></button>
-                          </div>
-                          <div className="modal-body">
-                            Apakah anda yakin ingin menghapus customer ini?
-                          </div>
-                          <div className="modal-footer">
-                            <button
-                              type="button"
-                              className="btn btn-primary"
-                              data-bs-dismiss="modal"
-                            >
-                              Close
-                            </button>
-                            <button
-                              onClick={() => handleDelete(customer.customerId)}
-                              data-bs-dismiss="modal"
-                              className="btn btn-danger text-white"
-                            >
-                              Hapus
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div> */}
-                  </div>
-                </td>
-              </tr>
-            ))}
+            {data &&
+              data.data.map((customer, index) => (
+                <tr key={customer.customerId}>
+                  <td>{index + 1 + +size * (+page - 1)}</td>
+                  <td>{customer.customerName}</td>
+                  <td>{customer.customerPhone}</td>
+                  <td>{customer.customerUsername}</td>
+                  <td>
+                    <div className="btn-group">
+                      <Link
+                        to={`/customer/update/${customer.customerId}`}
+                        className="btn btn-primary"
+                      >
+                        <i>
+                          <IconEditCircle />
+                        </i>
+                      </Link>
+                      <button
+                        type="button"
+                        className="btn btn-danger text-white"
+                        data-bs-toggle="modal"
+                        data-bs-target="#deleteModal"
+                        onClick={() => setCustomerId(customer.customerId)}
+                      >
+                        <IconTrash />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>
 
+      <div className="modal fade" id="deleteModal" aria-hidden="true">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h1 className="modal-title fs-5">Konfirmasi Hapus Customer</h1>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div className="modal-body">
+              Apakah anda yakin ingin menghapus customer ini?
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-primary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+              <button
+                onClick={() => handleDelete(customerId)}
+                data-bs-dismiss="modal"
+                className="btn btn-danger text-white"
+              >
+                Hapus
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="d-flex align-items-center justify-content-between mt-4">
         <small>
-          Show data {customers.length} of {paging.totalElement}
+          Show data {data && data.data?.length} of {paging.totalElement}
         </small>
         <nav aria-label="Page navigation example">
           <ul className="pagination">

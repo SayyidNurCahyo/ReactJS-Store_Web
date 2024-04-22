@@ -7,6 +7,7 @@ import CustomerService from "../../../services/CustomerService";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import {IconDeviceFloppy, IconX} from '@tabler/icons-react'
+import { showErrorToast, showSuccessToast } from "../../../utils/ToastUtil";
 
 const schema = zod.object({
   id: zod.string().optional(),
@@ -49,10 +50,11 @@ export default function CustomerForm() {
       const response = await customerService.update(data);
       if (response && response.statusCode === 202 ) {
         clearForm();
+        showSuccessToast(response.message);
       }
       navigate("/customer");
     } catch (err) {
-      console.log(err);
+      showErrorToast(err);
     }
   };
 
