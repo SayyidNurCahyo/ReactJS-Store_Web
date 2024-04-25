@@ -6,7 +6,7 @@ import CustomerService from "../../../services/CustomerService";
 // import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { IconEditCircle, IconTrash } from "@tabler/icons-react";
-import Loading from "../../../shared/loading/Loading";
+// import Loading from "../../../shared/loading/Loading";
 import { showErrorToast, showSuccessToast } from "../../../utils/ToastUtil";
 import { useQuery } from "react-query";
 
@@ -19,6 +19,7 @@ export default function CustomerList() {
   const search = searchParam.get("name") || "";
   const page = searchParam.get("page") || "1";
   const size = searchParam.get("size") || "5";
+  const query = {name: search, page: page, size: size}
 
   const [paging, setPaging] = useState({
     page: page,
@@ -60,14 +61,11 @@ export default function CustomerList() {
     }
   };
 
-  const { data, isLoading, refetch } = useQuery({
-    queryKey: ["customers", search, page, size],
+  const { data, refetch } = useQuery({
+    queryKey: ["customers", query],
     queryFn: async () => {
-      return await customerService.getAll({
-        name: search,
-        page: page,
-        size: size,
-      });
+      if(query.name === '') delete query.name
+      return await customerService.getAll(query)
     },
     onSuccess: (data) => {
       setPaging(data.paging);

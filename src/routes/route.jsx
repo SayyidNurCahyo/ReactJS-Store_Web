@@ -4,9 +4,12 @@ import Register from "../pages/authentication/Register";
 import ProtectedRoute from "./ProtectedRoute";
 import Layout from "../layout/Layout";
 import Dashboard from "../pages/dashboard/Dashboard";
-import Customer from '../pages/customer/Customer'
+import Customer from "../pages/customer/Customer";
 import CustomerList from "../pages/customer/components/CustomerList";
 import CustomerForm from "../pages/customer/components/CustomerForm";
+import Menu from "../pages/menu/Menu";
+import MenuList from "../pages/menu/components/MenuList";
+import MenuForm from '../pages/menu/components/MenuForm'
 
 const router = createBrowserRouter([
   {
@@ -30,20 +33,37 @@ const router = createBrowserRouter([
         element: <Dashboard />,
       },
       {
-        path: 'customer',
-        element: <Customer/>,
+        path: "customer",
+        element: <Customer />,
         children: [
-            {
-                index: true,
-                element: <CustomerList/>
-            },
-            {
-                path: 'update/:id',
-                element: <CustomerForm/>
-            }
-        ]
+          {
+            index: true,
+            element: <CustomerList />,
+          },
+          {
+            path: "update/:id",
+            element: <CustomerForm />,
+          },
+        ],
       },
-      
+      {
+        path: "menu",
+        element: <Menu />,
+        children: [
+          {
+            index: true,
+            element: <MenuList />,
+          },
+          {
+            path: "new",
+            element: <MenuForm />,
+          },
+          {
+            path: "update/:id",
+            element: <MenuForm />,
+          },
+        ],
+      },
     ],
   },
 ]);

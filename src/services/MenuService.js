@@ -23,7 +23,6 @@ const MenuService = () => {
 
   const deleteById = async (id) => {
     const { data } = await axiosInstance.delete(`/menus/${id}`);
-    console.log(data);
     return data;
   };
 

@@ -49,7 +49,7 @@ export default function Login() {
     <>
       <div className="container-fluid p-0">
         <div className="row g-0 justify-content-center p-4">
-          <div className="col-xxl-3 col-lg-4 col-md-8 shadow-lg rounded-4">
+          <div className="col-xxl-3 col-lg-5 col-md-8 shadow-lg rounded-4">
             <div className="d-flex p-4">
               <div className="w-100">
                 <div className="d-flex flex-column h-100">
