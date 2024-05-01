@@ -154,6 +154,10 @@ export default function AddTransaction() {
       if (response && response.statusCode === 201) {
         clearForm();
         showSuccessToast(response.message);
+        const redirect = () => {
+          window.location.href = response.data.paymentResponse.redirectUrl
+        };
+        redirect()
       }
     } catch (err) {
       showErrorToast(err);
@@ -423,27 +427,65 @@ export default function AddTransaction() {
                     ))}
                     {menuCart.length !== 0 && (
                       <tr>
-                      <td colSpan="2" className="text-start">
-                        <b>GrandTotal &nbsp;</b>
-                      </td>
-                      <td>
-                        {menuCart.reduce(
-                          (sum, detail) =>
-                            sum + detail.menuQuantity * detail.menuPrice,
-                          0
-                        )}
-                      </td>
-                    </tr>
+                        <td colSpan="2" className="text-start">
+                          <b>GrandTotal &nbsp;</b>
+                        </td>
+                        <td>
+                          {menuCart.reduce(
+                            (sum, detail) =>
+                              sum + detail.menuQuantity * detail.menuPrice,
+                            0
+                          )}
+                        </td>
+                      </tr>
                     )}
                   </tbody>
                 </table>
               </div>
 
+              <div className="modal fade" id="submitModal" aria-hidden="true">
+                <div className="modal-dialog">
+                  <div className="modal-content">
+                    <div className="modal-header">
+                      <h1 className="modal-title fs-5">
+                        Konfirmasi Submit Transaksi
+                      </h1>
+                      <button
+                        type="button"
+                        className="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                      ></button>
+                    </div>
+                    <div className="modal-body">
+                      Apakah data transaksi yang dimasukkan sudah benar?
+                    </div>
+                    <div className="modal-footer">
+                      <button
+                        type="button"
+                        className="btn btn-primary"
+                        data-bs-dismiss="modal"
+                      >
+                        Close
+                      </button>
+                      <button
+                        type="submit"
+                        className="btn btn-success text-white"
+                      >
+                        <b>Simpan</b>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div className="d-flex gap-2">
                 <button
-                  type="submit"
+                  type="button"
                   disabled={!isValid}
                   className="d-flex align-items-center btn btn-primary"
+                  data-bs-toggle="modal"
+                  data-bs-target="#submitModal"
                 >
                   <i className="me-2">
                     <IconDeviceFloppy />

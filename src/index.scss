@@ -13,6 +13,10 @@ body {
   font-family: "Montserrat", sans-serif;
 }
 
+.modal-body {
+  overflow: auto;
+}
+
 .required {
   position: relative;
 }

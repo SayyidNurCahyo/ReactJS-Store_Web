@@ -13,6 +13,7 @@ export default function Transaction() {
   const [searchParam, setSearchParam] = useSearchParams();
   const transactionService = useMemo(() => TransactionService(), []);
   const [transDetails, setTransDetails] = useState([]);
+  const [payment, setPayment] = useState();
 
   const search = searchParam.get("name") || "";
   const page = searchParam.get("page") || "1";
@@ -144,11 +145,78 @@ export default function Transaction() {
                           <IconListDetails />
                         </button>
                       </td>
-                      <td>{transaction.transactionStatus}</td>
+                      <td>
+                        <button
+                          type="button"
+                          className="btn btn-info text-white"
+                          data-bs-toggle="modal"
+                          data-bs-target="#statusModal"
+                          onClick={() =>
+                            setPayment(transaction.paymentResponse)
+                          }
+                        >
+                          {transaction.paymentResponse.transactionStatus}
+                        </button>
+                      </td>
                     </tr>
                   ))}
               </tbody>
             </table>
+          </div>
+
+          <div className="modal fade" id="statusModal" aria-hidden="true">
+            <div className="modal-dialog modal-lg">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h1 className="modal-title fs-5">Pembayaran</h1>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div className="modal-body">
+                  <table className="table">
+                    <tbody>
+                      <tr>
+                        <td className="ps-2 pe-2">Link Pembayaran</td>
+                        <td className="ps-1 pe-1">=</td>
+                        <td className="ps-2 pe-2">
+                          {payment && payment.redirectUrl}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="ps-2 pe-2">Status Pembayaran</td>
+                        <td className="ps-1 pe-1">=</td>
+                        <td className="ps-2 pe-2">
+                          {payment && payment.transactionStatus}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div className="modal-footer">
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    data-bs-dismiss="modal"
+                  >
+                    Close
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-success text-white"
+                    data-bs-dismiss="modal"
+                    onClick={() => {
+                      window.location.href = payment.redirectUrl
+                    }}
+                  >
+                    Bayar Sekarang
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className="modal fade" id="detailModal" aria-hidden="true">
