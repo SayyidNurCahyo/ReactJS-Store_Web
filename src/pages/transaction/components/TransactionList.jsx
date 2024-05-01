@@ -1,28 +1,18 @@
 import { useMemo } from "react";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
-import MenuService from "../../../services/MenuService";
-// import { useEffect } from "react";
+import TransactionService from "../../../services/TransactionService";
 import { Link } from "react-router-dom";
-import {
-  IconEditCircle,
-  IconTrash,
-  IconPlus,
-  IconArrowBadgeLeft,
-  IconArrowBadgeRight,
-} from "@tabler/icons-react";
+import { IconPlus, IconListDetails } from "@tabler/icons-react";
 import Loading from "../../../shared/loading/Loading";
-import { showErrorToast, showSuccessToast } from "../../../utils/ToastUtil";
 import { useQuery } from "react-query";
+import { useForm } from "react-hook-form";
 
-export default function MenuList() {
-  const [menuId, setMenuId] = useState();
+export default function TransactionList() {
   const { register } = useForm();
   const [searchParam, setSearchParam] = useSearchParams();
-  const menuService = useMemo(() => MenuService(), []);
-  const [imageIndex, setImageIndex] = useState([]);
-  const [store, setStore] = useState();
+  const transactionService = useMemo(() => TransactionService(), []);
+  const [transDetails, setTransDetails] = useState([]);
 
   const search = searchParam.get("name") || "";
   const page = searchParam.get("page") || "1";
@@ -40,7 +30,6 @@ export default function MenuList() {
 
   const handleSearch = (event) => {
     const { value } = event.target;
-    // if (value === "") setSearchParam({ page: "1", size: "5" });
     setSearchParam({ name: value, page: "1", size: "5" });
   };
 
@@ -59,32 +48,13 @@ export default function MenuList() {
     setSearchParam({ name: search, page: page, size: size });
   };
 
-  const handleDelete = async (id) => {
-    try {
-      const response = await menuService.deleteById(id);
-      showSuccessToast(response.message);
-      refetch();
-    } catch (err) {
-      showErrorToast(err);
-    }
-  };
-
-  const { data, isLoading, refetch } = useQuery({
-    queryKey: ["menus", query],
+  const { data, isLoading } = useQuery({
+    queryKey: ["transactions", query],
     queryFn: async () => {
-      if (query.name === "") delete query.name;
-      return await menuService.getAll(query);
+      return await transactionService.getAll(query);
     },
     onSuccess: (data) => {
-      if (store !== data.data) {
-        setStore(data.data)
-        setPaging(data.paging);
-        let a = [];
-        for (let index = 0; index < data.data.length; index++) {
-          a.push(0);
-        }
-        setImageIndex(a);
-      }
+      setPaging(data.paging);
     },
   });
 
@@ -95,12 +65,12 @@ export default function MenuList() {
   return (
     <div className="p-4 shadow-sm rounded-2">
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h3>Daftar Menu</h3>
-        <Link className="btn btn-primary" to="/menu/new">
+        <h3>Daftar Transaksi</h3>
+        <Link className="btn btn-primary" to="/transaction/new">
           <i className="me-2">
             <IconPlus />
           </i>
-          Tambah Menu
+          Tambah Transaksi
         </Link>
       </div>
       <div className="d-flex justify-content-between align-items-center mt-4">
@@ -112,7 +82,6 @@ export default function MenuList() {
               id="size"
               onChange={(e) => {
                 setSearchParam({
-                  name: search,
                   page: page,
                   size: e.target.value,
                 });
@@ -144,90 +113,47 @@ export default function MenuList() {
         <table className="table overflow-auto">
           <thead>
             <tr>
-              <th className="text-center">No</th>
-              <th className="text-center">Menu</th>
-              <th className="text-center">Harga</th>
-              <th className="text-center">Gambar</th>
-              <th className="text-center">Aksi</th>
+              <th>No</th>
+              <th>Tanggal</th>
+              <th>Customer</th>
+              <th>Meja</th>
+              <th>Detail</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>
             {data &&
-              data.data.map((menu, index) => (
-                <tr key={menu.menuId}>
-                  <td className="text-center">
-                    {index + 1 + +size * (+page - 1)}
-                  </td>
-                  <td className="text-center">{menu.menuName}</td>
-                  <td className="text-center">{menu.menuPrice}</td>
-                  <td className="d-flex align-items-center justify-content-center">
-                    <button
-                      onClick={() => {
-                        if (imageIndex <= 0) return;
-                        let s = imageIndex.slice();
-                        s.splice(index, 1, imageIndex[index] - 1);
-                        setImageIndex(s);
-                      }}
-                      disabled={imageIndex[index] === 0}
-                      className="btn btn-outline-primary btn-sm"
-                    >
-                      <IconArrowBadgeLeft />
-                    </button>
-                    <img
-                      className="img-fluid m-1"
-                      width={200}
-                      height={200}
-                      src={menu.imageResponses[imageIndex[index]].url}
-                      alt={menu.imageResponses[imageIndex[index]].url}
-                    />
-                    <button
-                      disabled={
-                        imageIndex[index] === menu.imageResponses.length - 1
-                      }
-                      onClick={() => {
-                        if (imageIndex[index] >= menu.imageResponses.length - 1)
-                          return;
-                        let s = imageIndex.slice();
-                        s.splice(index, 1, imageIndex[index] + 1);
-                        setImageIndex(s);
-                      }}
-                      className="btn btn-outline-primary btn-sm"
-                    >
-                      <IconArrowBadgeRight />
-                    </button>
-                  </td>
+              data.data.map((transaction, index) => (
+                <tr key={transaction.transactionId}>
+                  <td>{index + 1 + +size * (+page - 1)}</td>
+                  <td>{transaction.transactionDate}</td>
+                  <td>{transaction.customerName}</td>
+                  <td>{transaction.table}</td>
                   <td>
-                    <div className="btn-group d-flex justify-content-center">
-                      <Link
-                        to={`/menu/update/${menu.menuId}`}
-                        className="btn btn-primary"
-                      >
-                        <i>
-                          <IconEditCircle />
-                        </i>
-                      </Link>
-                      <button
-                        type="button"
-                        className="btn btn-danger text-white"
-                        data-bs-toggle="modal"
-                        data-bs-target="#deleteModal"
-                        onClick={() => setMenuId(menu.menuId)}
-                      >
-                        <IconTrash />
-                      </button>
-                    </div>
+                    <button
+                      type="button"
+                      className="btn btn-secondary text-white"
+                      data-bs-toggle="modal"
+                      data-bs-target="#detailModal"
+                      onClick={() =>
+                        setTransDetails(transaction.transactionDetails)
+                      }
+                    >
+                      <IconListDetails />
+                    </button>
                   </td>
+                  <td>{transaction.transactionStatus}</td>
                 </tr>
               ))}
           </tbody>
         </table>
       </div>
 
-      <div className="modal fade" id="deleteModal" aria-hidden="true">
+      <div className="modal fade" id="detailModal" aria-hidden="true">
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h1 className="modal-title fs-5">Konfirmasi Hapus Menu</h1>
+              <h1 className="modal-title fs-5">Detail Transaksi</h1>
               <button
                 type="button"
                 className="btn-close"
@@ -236,7 +162,39 @@ export default function MenuList() {
               ></button>
             </div>
             <div className="modal-body">
-              Apakah anda yakin ingin menghapus menu ini?
+              <table className="table overflow-auto">
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Menu</th>
+                    <th>Kuantitas</th>
+                    <th>Harga</th>
+                    <th>SubTotal</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {transDetails.map((detail, index) => (
+                    <tr key={detail.detailId}>
+                      <td>{index + 1}</td>
+                      <td>{detail.menu}</td>
+                      <td>{detail.menuQuantity}</td>
+                      <td>{detail.menuPrice}</td>
+                      <td>{detail.menuQuantity * detail.menuPrice}</td>
+                    </tr>
+                  ))}
+                  <tr>
+                    <td colSpan="4" className="text-end">
+                      <b>GrandTotal &nbsp;</b>
+                    </td>
+                    <td>
+                      {transDetails.reduce(
+                        (sum, detail) =>
+                          sum + detail.menuQuantity * detail.menuPrice, 0
+                      )}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
             <div className="modal-footer">
               <button
@@ -245,13 +203,6 @@ export default function MenuList() {
                 data-bs-dismiss="modal"
               >
                 Close
-              </button>
-              <button
-                onClick={() => handleDelete(menuId)}
-                data-bs-dismiss="modal"
-                className="btn btn-danger text-white"
-              >
-                Hapus
               </button>
             </div>
           </div>

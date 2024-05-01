@@ -9,9 +9,21 @@ import CustomerList from "../pages/customer/components/CustomerList";
 import CustomerForm from "../pages/customer/components/CustomerForm";
 import Menu from "../pages/menu/Menu";
 import MenuList from "../pages/menu/components/MenuList";
-import MenuForm from '../pages/menu/components/MenuForm'
+import MenuForm from "../pages/menu/components/MenuForm";
+import Table from "../pages/table/Table";
+import TableList from "../pages/table/components/TableList";
+import TableForm from "../pages/table/components/TableForm";
+import ErrorBoundary from "../shared/Error/ErrorBoundary";
+import Error404 from "../shared/Error/Error404";
+import Transaction from "../pages/transaction/Transaction";
+import TransactionList from "../pages/transaction/components/TransactionList";
+import TransactionForm from "../pages/transaction/components/TransactionForm";
 
 const router = createBrowserRouter([
+  {
+    path: "*",
+    element: <Error404 />,
+  },
   {
     path: "/login",
     element: <Login />,
@@ -23,9 +35,11 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      <ProtectedRoute>
-        <Layout />
-      </ProtectedRoute>
+      <ErrorBoundary>
+        <ProtectedRoute>
+          <Layout />
+        </ProtectedRoute>
+      </ErrorBoundary>
     ),
     children: [
       {
@@ -61,6 +75,38 @@ const router = createBrowserRouter([
           {
             path: "update/:id",
             element: <MenuForm />,
+          },
+        ],
+      },
+      {
+        path: "table",
+        element: <Table />,
+        children: [
+          {
+            index: true,
+            element: <TableList />,
+          },
+          {
+            path: "new",
+            element: <TableForm />,
+          },
+          {
+            path: "update/:id",
+            element: <TableForm />,
+          },
+        ],
+      },
+      {
+        path: "transaction",
+        element: <Transaction />,
+        children: [
+          {
+            index: true,
+            element: <TransactionList />,
+          },
+          {
+            path: "new",
+            element: <TransactionForm />,
           },
         ],
       },

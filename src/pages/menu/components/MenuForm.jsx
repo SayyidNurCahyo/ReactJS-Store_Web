@@ -69,7 +69,9 @@ export default function MenuForm() {
           price: data.price,
         };
         form.append("menu", JSON.stringify(menu));
-        form.append("image", data.image);
+        for (let index = 0; index < Array.from(data.image).length; index++) {
+          form.append("image", data.image[index]);
+        }
         const response = await menuService.update(form);
         if (response && response.statusCode === 202) {
           clearForm();
@@ -84,8 +86,6 @@ export default function MenuForm() {
         for (let index = 0; index < Array.from(data.image).length; index++) {
           form.append("image", data.image[index]);
         }
-        console.log(Array.from(data.image).length);
-        console.log(form.get('image'));
         const response = await menuService.create(form);
         if (response && response.statusCode === 201) {
           clearForm();
@@ -106,8 +106,16 @@ export default function MenuForm() {
           const currentMenu = response.data;
           setValue("id", currentMenu.menuId);
           setValue("name", currentMenu.menuName);
-          setValue("price", currentMenu.menuPrice);
-          setPreviewImage(currentMenu.imageResponses.url);
+          setValue("price", currentMenu.menuPrice.toString());
+          let url = [];
+          for (
+            let index = 0;
+            index < currentMenu.imageResponses.length;
+            index++
+          ) {
+            url.push(currentMenu.imageResponses[index].url);
+          }
+          setPreviewImage(url);
           trigger();
         } catch (error) {
           console.log(error);
@@ -115,7 +123,7 @@ export default function MenuForm() {
       };
       getMenuById();
     }
-  }, []);
+  }, [id, setValue, trigger]);
 
   return (
     <div className="shadow-sm p-4 rounded-2">

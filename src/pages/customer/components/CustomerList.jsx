@@ -38,17 +38,17 @@ export default function CustomerList() {
 
   const handleNextPage = () => {
     if (page >= paging.totalPages) return;
-    setSearchParam({ page: +page + 1, size: size });
+    setSearchParam({ name: search, page: +page + 1, size: size });
   };
 
   const handlePreviousPage = () => {
     if (+page === 1) return;
-    setSearchParam({ page: +page - 1, size: size });
+    setSearchParam({ name: search, page: +page - 1, size: size });
   };
 
   const navigatePage = (page) => {
     if (!page) return;
-    setSearchParam({ page: page, size: size });
+    setSearchParam({ name: search, page: page, size: size });
   };
 
   const handleDelete = async (id) => {

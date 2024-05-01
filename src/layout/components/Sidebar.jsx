@@ -1,4 +1,4 @@
-import {IconDoorExit, IconHome2, IconUser, IconToolsKitchen2, IconDesk} from "@tabler/icons-react";
+import {IconDoorExit, IconHome2, IconUser, IconToolsKitchen2, IconDesk, IconShoppingCart} from "@tabler/icons-react";
 import PropTypes from "prop-types";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -82,6 +82,18 @@ export default function Sidebar({ isVisible, setVisible }) {
                 <IconDesk />
               </i>
               <span>Meja</span>
+            </Link>
+          </li>
+          <hr />
+          <li className="cursor-pointer text-white">
+            <Link
+              className="text-white text-decoration-none"
+              to="/transaction"
+            >
+              <i className="me-3">
+                <IconShoppingCart />
+              </i>
+              <span>Transaction</span>
             </Link>
           </li>
           <hr />
