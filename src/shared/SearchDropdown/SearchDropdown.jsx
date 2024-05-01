@@ -5,7 +5,8 @@ const SearchDropdown = ({
   label,
   id,
   selectedVal,
-  handleChange
+  handleChange,
+  error,
 }) => {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -19,7 +20,7 @@ const SearchDropdown = ({
 
   const selectOption = (option) => {
     setQuery(() => "");
-    handleChange(option[label]);
+    handleChange(option[id]);
     setIsOpen((isOpen) => !isOpen);
   };
 
@@ -29,8 +30,10 @@ const SearchDropdown = ({
 
   const getDisplayValue = () => {
     if (query) return query;
-    if (selectedVal) return selectedVal;
-
+    if (selectedVal)
+      return options
+        .filter((option) => option[id] === selectedVal)
+        .map((option) => option[label]);
     return "";
   };
 
@@ -40,24 +43,25 @@ const SearchDropdown = ({
     );
   };
 
+  // useEffect(() => {
+  //   // if(query==='') handleError()
+  // }, [query])
+
   return (
     <div className="dropdown">
-      <div className="control">
-        <div className="selected-value">
-          <input
-            ref={inputRef}
-            type="text"
-            value={getDisplayValue()}
-            name="searchTerm"
-            onChange={(e) => {
-              setQuery(e.target.value);
-              handleChange(null);
-            }}
-            onClick={toggle}
-          />
-        </div>
-        <div className={`arrow ${isOpen ? "open" : ""}`}></div>
-      </div>
+      <input
+        ref={inputRef}
+        type="text"
+        value={getDisplayValue()}
+        name="searchTerm"
+        onChange={(e) => {
+          setQuery(e.target.value);
+          handleChange(null);
+        }}
+        onClick={toggle}
+        className={`form-control selected-value ${error && "is-invalid"}`}
+      />
+      <div className={`arrow ${isOpen ? "open" : ""} ${error && "invalid"}`}></div>
 
       <div className={`options ${isOpen ? "open" : ""}`}>
         {filter(options).map((option, index) => {
@@ -74,6 +78,7 @@ const SearchDropdown = ({
           );
         })}
       </div>
+      {error && <div className="invalid-feedback">pilih input terlebih dahulu</div>}
     </div>
   );
 };

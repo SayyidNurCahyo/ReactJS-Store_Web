@@ -177,8 +177,8 @@ export default function MenuList() {
                       className="img-fluid m-1"
                       width={200}
                       height={200}
-                      src={menu.imageResponses[imageIndex[index]].url}
-                      alt={menu.imageResponses[imageIndex[index]].url}
+                      src={menu.imageResponses[imageIndex[index]] && menu.imageResponses[imageIndex[index]].url}
+                      alt={menu.imageResponses[imageIndex[index]] && menu.imageResponses[imageIndex[index]].url}
                     />
                     <button
                       disabled={

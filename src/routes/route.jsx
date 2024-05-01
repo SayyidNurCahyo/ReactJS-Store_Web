@@ -3,7 +3,7 @@ import Login from "../pages/authentication/Login";
 import Register from "../pages/authentication/Register";
 import ProtectedRoute from "./ProtectedRoute";
 import Layout from "../layout/Layout";
-import Dashboard from "../pages/dashboard/Dashboard";
+// import Dashboard from "../pages/dashboard/Dashboard";
 import Customer from "../pages/customer/Customer";
 import CustomerList from "../pages/customer/components/CustomerList";
 import CustomerForm from "../pages/customer/components/CustomerForm";
@@ -16,8 +16,7 @@ import TableForm from "../pages/table/components/TableForm";
 import ErrorBoundary from "../shared/Error/ErrorBoundary";
 import Error404 from "../shared/Error/Error404";
 import Transaction from "../pages/transaction/Transaction";
-import TransactionList from "../pages/transaction/components/TransactionList";
-import TransactionForm from "../pages/transaction/components/TransactionForm";
+import AddTransaction from "../pages/transaction/AddTransaction";
 
 const router = createBrowserRouter([
   {
@@ -44,7 +43,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Dashboard />,
+        element: <AddTransaction />,
       },
       {
         path: "customer",
@@ -99,16 +98,6 @@ const router = createBrowserRouter([
       {
         path: "transaction",
         element: <Transaction />,
-        children: [
-          {
-            index: true,
-            element: <TransactionList />,
-          },
-          {
-            path: "new",
-            element: <TransactionForm />,
-          },
-        ],
       },
     ],
   },

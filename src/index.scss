@@ -38,10 +38,6 @@ body {
   min-height: 100dvh;
 }
 
-.App {
-  font-family: sans-serif;
-}
-
 .dropdown {
   position: relative;
   color: #333;
@@ -62,16 +58,37 @@ body {
   width: 0;
 }
 
+.dropdown .arrow.invalid{
+  border-color: #999 transparent transparent;
+  border-style: solid;
+  border-width: 5px 5px 0;
+  content: " ";
+  display: block;
+  height: 0;
+  margin-top: 0.3rem;
+  margin-right: 1.5rem;
+  position: absolute;
+  right: 10px;
+  top: 14px;
+  width: 0;
+}
+
 .dropdown .arrow.open {
   border-color: transparent transparent #999;
   border-width: 0 5px 5px;
+}
+
+.dropdown .arrow.open.invalid {
+  border-color: transparent transparent #999;
+  border-width: 0 5px 5px;
+  margin-right: 1.5rem;
 }
 
 .dropdown .selected-value input {
   line-height: 1.5;
   font-size: 1rem;
   background-color: #fff;
-  border: 1px solid #ccc;
+  border: 0px solid #ccc;
   border-radius: 2px;
   box-sizing: border-box;
   cursor: default;
@@ -85,6 +102,7 @@ body {
   display: none;
   background-color: #fff;
   border: 1px solid #ccc;
+  border-radius: 8px;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
   box-sizing: border-box;
   margin-top: -1px;
