@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import PropTypes from 'prop-types'
 
 const SearchDropdown = ({
   options,
@@ -84,3 +85,12 @@ const SearchDropdown = ({
 };
 
 export default SearchDropdown;
+
+SearchDropdown.propTypes = {
+  options: PropTypes.array,
+  label: PropTypes.string,
+  id: PropTypes.string,
+  selectedVal: PropTypes.string,
+  handleChange: PropTypes.func,
+  error: PropTypes.string
+}

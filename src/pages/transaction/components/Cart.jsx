@@ -1,5 +1,6 @@
 import { IconMinus, IconPlus, IconShoppingCartPlus } from "@tabler/icons-react";
 import { useState } from "react";
+import PropTypes from 'prop-types'
 
 export default function Cart({handleCart}) {
   const [cart, setCart] = useState(0);
@@ -34,4 +35,8 @@ export default function Cart({handleCart}) {
       )}
     </>
   );
+}
+
+Cart.propTypes = {
+    handleCart: PropTypes.func
 }

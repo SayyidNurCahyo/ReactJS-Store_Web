@@ -1,19 +1,14 @@
 import { useForm } from "react-hook-form";
 import * as zod from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from "react-router-dom";
 import { useMemo } from "react";
 import TransactionService from "../../services/TransactionService";
-import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import {
   IconDeviceFloppy,
   IconX,
   IconArrowBadgeLeft,
   IconArrowBadgeRight,
-  IconShoppingCartPlus,
-  IconMinus,
-  IconPlus,
 } from "@tabler/icons-react";
 import { showErrorToast, showSuccessToast } from "../../utils/ToastUtil";
 import { useState } from "react";
@@ -209,7 +204,7 @@ export default function AddTransaction() {
               <thead>
                 <tr>
                   <th className="text-center">No</th>
-                  <th className="text-center">Gambar</th>
+                  <th className="text-center">Menu</th>
                 </tr>
               </thead>
               <tbody>

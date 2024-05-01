@@ -146,7 +146,7 @@ export default function MenuList() {
             <tr>
               <th className="text-center">No</th>
               <th className="text-center">Menu</th>
-              <th className="text-center">Harga</th>
+              <th className="text-center">Harga (Rp.)</th>
               <th className="text-center">Gambar</th>
               <th className="text-center">Aksi</th>
             </tr>
