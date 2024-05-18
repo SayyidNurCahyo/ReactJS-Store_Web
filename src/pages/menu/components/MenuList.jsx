@@ -198,6 +198,7 @@ export default function MenuList() {
                   </td>
                   <td>
                     <div className="btn-group d-flex justify-content-center">
+                      {/* update */}
                       <Link
                         to={`/menu/update/${menu.menuId}`}
                         className="btn btn-primary"
@@ -216,6 +217,7 @@ export default function MenuList() {
                         <IconTrash />
                       </button>
                     </div>
+
                   </td>
                 </tr>
               ))}
