@@ -10,4 +10,4 @@ Project for creating fullstack api with website. The purpose is to provide servi
 7. Middleware authorization for spesific role.
 8. Swagger documentation.
 
-API link = https://github.com/SayyidNurCahyo/store-product-management-API.git
+API link = https://github.com/SayyidNurCahyo/E-Commerce-API
