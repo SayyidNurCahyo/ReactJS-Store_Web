@@ -1,8 +1,13 @@
 # React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Project for creating fullstack api with website. The purpose is to provide services for the customer with digital feature and admin can manage their product, table or transaction. This project use React JS as Website development tools and Java Spring as API framework. This project have several feature include =
+1. CRUD for menus/product, table for dine in or take away.
+2. Security for login register to customer and manage their profile using JWT.
+3. Upload image product.
+4. Create Report PDF from database.
+5. Create and read transaction.
+6. Using Midtrans as payment gateway.
+7. Middleware authorization for spesific role.
+8. Swagger documentation.
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+API link = https://github.com/SayyidNurCahyo/store-product-management-API.git
